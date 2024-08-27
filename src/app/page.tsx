@@ -4,6 +4,9 @@ import { useState } from "react";
 export default function RegisterForm() {
   const [fname, setFname] = useState("");
   const [fnameError, setFnameError] = useState(false);
+  const [lnameError, setLnameError] = useState(false);
+  const [planError, setPlanError] = useState(false);
+  const [genderError, setGenderError] = useState(false);
   const [lname, setLname] = useState("");
   const [plan, setPlan] = useState("");
   const [gender, setGender] = useState("");
@@ -19,18 +22,22 @@ export default function RegisterForm() {
   };
 
   const inputLnameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLnameError(false);
     setLname(event.target.value);
   };
 
   const selectPlanOnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPlanError(false);
     setPlan(event.target.value);
   };
 
   const radioGenderMaleOnChange = () => {
+    setGenderError(false);
     setGender("male");
   };
 
   const radioGenderFemaleOnChange = () => {
+    setGenderError(false);
     setGender("female");
   };
 
@@ -58,6 +65,8 @@ export default function RegisterForm() {
     if (buyShoes) total += 600;
     if (buyCap) total += 400;
 
+    if (buyBottle && buyShoes && buyCap) total -= total * 0.2;
+  
     return total;
   };
 
@@ -70,11 +79,32 @@ export default function RegisterForm() {
       setFnameError(true);
     }
 
-    if (fnameOk) {
+    let lnameOk = true;
+    if (lname === "") {
+      lnameOk = false;
+      setLnameError(true);
+    }
+
+    let planOk = true;
+    if (plan === "") {
+      planOk = false;
+      setPlanError(true);
+    }
+
+    let genderOk = true;
+    if (gender === "") {
+      genderOk = false;
+      setGenderError(true);
+    }
+
+
+    if (fnameOk&&lnameOk&&planOk&&genderOk) {
       alert(
         `Registration complete. Please pay money for ${computeTotalPayment().toLocaleString()} THB.`
       );
     }
+
+
   };
 
   return (
@@ -88,13 +118,14 @@ export default function RegisterForm() {
             className={"form-control" + (fnameError ? " is-invalid" : "")}
             onChange={inputFnameOnChange}
             value={fname}
+            
           />
           <div className="invalid-feedback">Invalid first name</div>
         </div>
         <div>
           <label className="form-label">Last name</label>
           <input
-            className="form-control"
+            className={"form-control" + (lnameError ? " is-invalid" : "")}
             onChange={inputLnameOnChange}
             value={lname}
           />
@@ -106,7 +137,7 @@ export default function RegisterForm() {
       <div>
         <label className="form-label">Plan</label>
         <select
-          className="form-select"
+          className={"form-select"+ (planError ? " is-invalid" : "")}
           onChange={selectPlanOnChange}
           value={plan}
         >
@@ -137,9 +168,11 @@ export default function RegisterForm() {
             checked={gender === "female"}
           />
           Female 👩
-          {/* To show error when user did not select gender, */}
+
+          {/* To show error when user did not select gender, */}   
+          {genderError && <div className="text-danger">Please select gender</div>}
           {/* We just have to render the div below (Not using is-invalid bootstrap class) */}
-          {/* <div className="text-danger">Please select gender</div> */}
+           
         </div>
       </div>
 
