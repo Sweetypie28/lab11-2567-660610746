@@ -13,6 +13,7 @@ export default function RegisterForm() {
   const [buyBottle, setBuyBottle] = useState(false);
   const [buyShoes, setBuyShoes] = useState(false);
   const [buyCap, setBuyCap] = useState(false);
+  const [isUserAgreed, setisUserAgreed] = useState(false);
 
   // ----------------------------------------------------------------
 
@@ -52,6 +53,11 @@ export default function RegisterForm() {
   const cbBuyCapOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBuyCap(event.target.checked);
   };
+
+  const cbisUserAgreedOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setisUserAgreed(event.target.checked);
+  };
+
 
   // ----------------------------------------------------------------
 
@@ -103,7 +109,6 @@ export default function RegisterForm() {
         `Registration complete. Please pay money for ${computeTotalPayment().toLocaleString()} THB.`
       );
     }
-
 
   };
 
@@ -216,13 +221,16 @@ export default function RegisterForm() {
       <div>
         Total Payment : {computeTotalPayment().toLocaleString()} THB
         {/* Render below element conditionally when user get 20% discount */}
-        {/* <span className="text-success d-block">(20% Discounted)</span> */}
+        {buyBottle&&buyShoes&&buyCap&&<span className="text-success d-block">(20% Discounted)</span> }
       </div>
 
       {/* Terms and conditions */}
       <div>
-        <input className="me-2" type="checkbox" />I agree to the terms and
-        conditions
+        <input className="me-2" 
+        type="checkbox" 
+        onChange={cbisUserAgreedOnChange}
+        checked={isUserAgreed}
+        />I agree to the terms and conditions
       </div>
 
       {/* Register Button */}
@@ -230,7 +238,7 @@ export default function RegisterForm() {
         className="btn btn-success my-2"
         onClick={registerBtnOnClick}
         //You can embbed a state like below to disabled the button
-        //disabled={isUserAgreed}
+        disabled={!isUserAgreed} 
       >
         Register
       </button>
